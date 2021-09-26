@@ -37,9 +37,9 @@ public class SkierServlet extends HttpServlet {
 //    }
 
     private boolean isUrlValid(String[] urlPath) {
-        // TODO: validate the request url path according to the API spec
         // urlPath  = "/1/seasons/2019/day/1/skier/123"
         // urlParts = [, 1, seasons, 2019, day, 1, skier, 123]
+
         return true;
     }
 }
