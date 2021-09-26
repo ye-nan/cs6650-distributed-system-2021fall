@@ -73,7 +73,7 @@ public class SkierServlet extends HttpServlet {
         } else {
             LiftEvent lift = gson.fromJson(request.getReader(), LiftEvent.class);
             response.getWriter().write((gson.toJson(lift)));
-            response.setStatus(HttpServletResponse.SC_OK);
+            response.setStatus(HttpServletResponse.SC_CREATED);
         }
     }
 
