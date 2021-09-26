@@ -80,13 +80,8 @@ public class CommandLineParser {
             throw new ParseException("Missing one or more input args.");
 
         // add default value to args
-        List<String> argList = new ArrayList<>();
-<<<<<<< HEAD
-        argList.addAll(Arrays.asList(args));
-=======
-        for (String arg : args)
-            argList.add(arg);
->>>>>>> 0b9285e7d1e5e0a40eae7874b210f2ee3f2479a0
+        List<String> argList = new ArrayList<>(Arrays.asList(args));
+
         if (this.options.getOption("lifts").getValue() == null) {
             argList.add("--lifts");
             argList.add(String.valueOf(DEFAULT_NUMLIFTS));
