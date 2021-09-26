@@ -1,9 +1,11 @@
+package servlet;
+
 import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
 
-@WebServlet(name = "SkierServlet", value = "/SkierServlet")
+@WebServlet(name = "SkierServlet")
 public class SkierServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -37,9 +39,32 @@ public class SkierServlet extends HttpServlet {
 //    }
 
     private boolean isUrlValid(String[] urlPath) {
-        // urlPath  = "/1/seasons/2019/day/1/skier/123"
-        // urlParts = [, 1, seasons, 2019, day, 1, skier, 123]
 
-        return true;
+        if (urlPath.length == 3) {
+            // e.g., urlPath  = "/1/vertical"
+            try {
+                Integer.parseInt(urlPath[1]);
+                return urlPath[2].equals("vertical");
+            } catch (Exception e) {
+                return false;
+            }
+        } else if (urlPath.length == 8) {
+            // e.g., urlPath  = "/1/seasons/2019/day/1/skier/123"
+            try {
+                for (int i = 1; i < urlPath.length; i += 2) {
+                    Integer.parseInt(urlPath[i]);
+                }
+                return (urlPath[3].length() == 4
+                        && Integer.parseInt(urlPath[5]) >= 1
+                        && Integer.parseInt(urlPath[5]) <= 365
+                        && urlPath[2].equals("seasons")
+                        && urlPath[4].equals("day")
+                        && urlPath[6].equals("skier"));
+            } catch (Exception e) {
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
 }

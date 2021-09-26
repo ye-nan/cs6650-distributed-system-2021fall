@@ -5,7 +5,7 @@
          version="4.0">
     <servlet>
         <servlet-name>SkierServlet</servlet-name>
-        <servlet-class>SkierServlet</servlet-class>
+        <servlet-class>servlet.SkierServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
