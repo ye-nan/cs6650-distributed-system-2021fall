@@ -98,8 +98,8 @@ public class SkierServlet extends HttpServlet {
                         && Integer.parseInt(urlPath[5]) >= 1
                         && Integer.parseInt(urlPath[5]) <= 365
                         && urlPath[2].equals("seasons")
-                        && urlPath[4].equals("day")
-                        && urlPath[6].equals("skier"));
+                        && urlPath[4].equals("days")
+                        && urlPath[6].equals("skiers"));
             } catch (Exception e) {
                 return false;
             }
