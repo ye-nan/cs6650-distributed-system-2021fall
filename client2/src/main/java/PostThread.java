@@ -103,10 +103,7 @@ class PostThread implements Runnable {
                         StandardCharsets.UTF_8,
                         StandardOpenOption.APPEND)) {
                     bufferedWriter.write(
-                            "{" + startRequest
-                                    + ", POST, "
-                                    + latency + ", "
-                                    + response.statusCode() + "}\n");
+                            startRequest + ",POST," + latency + "," + response.statusCode() + "\n");
                 }
             } catch (InterruptedException | IOException e) {
                 e.printStackTrace();

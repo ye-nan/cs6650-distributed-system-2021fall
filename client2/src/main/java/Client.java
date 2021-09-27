@@ -28,7 +28,7 @@ public class Client {
         String dayId = "1";
         String serverURL = "http://" + params.getServer() + "/server_war_exploded/skiers";
 
-
+        stats.setLoadTestStart(System.currentTimeMillis());
         // Phase 1: startup
         int numThreads = params.getNumThreads() / 4;
         int numSkiersEachThread = params.getNumSkiers() / numThreads;
@@ -102,5 +102,14 @@ public class Client {
         System.out.println("Time spent: " + (stats.getLoadTestEnd() - stats.getLoadTestStart()));
         System.out.println("Success requests: " + stats.getNumSuccessReq());
         System.out.println("Failed requests: " + stats.getNumFailReq());
+
+        PerfCalculator.calculate(stats.getFilePath(), stats);
+        stats.setThroughput((stats.getNumSuccessReq().getAndAdd(stats.getNumFailReq().intValue())) /
+                (int)(stats.getLoadTestEnd() - stats.getLoadTestStart()));
+        System.out.println("Mean response Time: " + stats.getMeanResponse());
+        System.out.println("Median response Time: " + stats.getMedianResponse());
+        System.out.println("P99 response Time: " + stats.getP99());
+        System.out.println("Max response Time: " + stats.getMaxResponse());
+        System.out.println("Throughput: " + stats.getThroughput());
     }
 }
