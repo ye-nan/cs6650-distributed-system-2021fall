@@ -1,8 +1,4 @@
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.Option;
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
+import org.apache.commons.cli.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -72,6 +68,10 @@ public class CommandLineParser {
                 .build();
         options.addOption(server);
 
+        HelpFormatter formatter = new HelpFormatter();
+        String header = "Multi-thread client to interact with a remote Tomcat server for load testing\n\n";
+        String footer = "\nNan Ye, NEU Seattle, CS6650 2021Fall";
+        formatter.printHelp("Client", header, options, footer, true);
     }
 
     public InputParams parse(String[] args) throws ParseException{
