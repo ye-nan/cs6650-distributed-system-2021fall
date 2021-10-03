@@ -5,6 +5,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class Client {
     private static final int SKIDAY = 420;  // 420 mins from 9am - 4pm
+    private static final String WEB_APP = "/server_war";
 
     public static void main(String[] args) throws ParseException, InterruptedException {
         CommandLineParser parser = new CommandLineParser();
@@ -21,76 +22,66 @@ public class Client {
         int resortId = 1;
         String seasonId = "2021";
         String dayId = "1";
-        String serverURL = "http://" + params.getServer() + "/server_war_exploded/skiers";
+        String serverURL = "http://" + params.getServer() + WEB_APP + "/skiers";
 
         // Phase 1: startup
-        int numThreads = params.getNumThreads() / 4;
-        int numSkiersEachThread = params.getNumSkiers() / numThreads;
-        int startTime = 1;
-        int endTime = 90;
-        int numRequests = (int) (params.getNumRuns() * 0.2) * numSkiersEachThread;
-
-        System.out.println("Phase1-num of threads: " + numThreads);
-        System.out.println("Phase1-num of skiers for each thread: " + numSkiersEachThread);
-        System.out.println("Phase1-num of requests per thread: " + numRequests);
+        System.out.println("Phase1-num of threads: " + params.getNumThreads() / 4);
+        System.out.println("Phase1-num of skiers for each thread: " + params.getNumSkiers() / (params.getNumThreads() / 4));
+        System.out.println("Phase1-num of requests per thread: " + (int) (params.getNumRuns() * 0.2) * (params.getNumSkiers() / (params.getNumThreads() / 4)));
         System.out.println();
 
-        CountDownLatch latch = new CountDownLatch(numThreads / 10);
+        CountDownLatch latch1 = new CountDownLatch(params.getNumThreads() / 4 / 10);
 
-        for (int i = 0; i < numThreads; i++) {
-            Thread thread = new Thread(new PostThread(latch, 1, numSkiersEachThread,
-                    numRequests, params.getNumLifts(), startTime, endTime, serverURL, stats,
+        for (int i = 0; i < params.getNumThreads() / 4; i++) {
+            Thread thread = new Thread(
+                    new PostThread(latch1, 1, params.getNumSkiers() / (params.getNumThreads() / 4),
+                            (int) (params.getNumRuns() * 0.2) * (params.getNumSkiers() / (params.getNumThreads() / 4)),
+                            params.getNumLifts(),
+                            1, 90, serverURL, stats,
                     resortId, seasonId, dayId));
             thread.start();
         }
 
-        latch.await();
+        latch1.await();
 
         // Phase 2: peak
-        numThreads = params.getNumThreads();
-        numSkiersEachThread = params.getNumSkiers() / numThreads;
-        startTime = 91;
-        endTime = 360;
-        numRequests = (int) (params.getNumRuns() * 0.6) * numSkiersEachThread;
-
-        System.out.println("Phase2-num of threads: " + numThreads);
-        System.out.println("Phase2-num of skiers for each thread: " + numSkiersEachThread);
-        System.out.println("Phase2-num of requests per thread: " + numRequests);
+        System.out.println("Phase2-num of threads: " + params.getNumThreads());
+        System.out.println("Phase2-num of skiers for each thread: " + params.getNumSkiers() / params.getNumThreads());
+        System.out.println("Phase2-num of requests per thread: " + (int) (params.getNumRuns() * 0.6) * (params.getNumSkiers() / params.getNumThreads()));
         System.out.println();
 
-        latch = new CountDownLatch(numThreads / 10);
+        CountDownLatch latch2 = new CountDownLatch(params.getNumThreads() / 10);
 
-        for (int i = 0; i < numThreads; i++) {
-            Thread thread = new Thread(new PostThread(latch, 1, numSkiersEachThread,
-                    numRequests, params.getNumLifts(), startTime, endTime, serverURL, stats,
+        for (int i = 0; i < params.getNumThreads(); i++) {
+            Thread thread = new Thread(new PostThread(latch2,
+                    1, params.getNumSkiers() / params.getNumThreads(),
+                    (int) (params.getNumRuns() * 0.6) * (params.getNumSkiers() / params.getNumThreads()),
+                    params.getNumLifts(), 91, 360, serverURL, stats,
                     resortId, seasonId, dayId));
             thread.start();
         }
 
-        latch.await();
+        latch2.await();
 
         // Phase 3: cool down
-        numThreads = params.getNumThreads() / 4;
-        numSkiersEachThread = params.getNumSkiers() / numThreads;
-        startTime = 361;
-        endTime = 420;
-        numRequests = (int) (params.getNumRuns() * 0.1) * numSkiersEachThread;
-
-        System.out.println("Phase3-num of threads: " + numThreads);
-        System.out.println("Phase3-num of skiers for each thread: " + numSkiersEachThread);
-        System.out.println("Phase3-num of requests per thread: " + numRequests);
+        System.out.println("Phase3-num of threads: " + params.getNumThreads() / 4);
+        System.out.println("Phase3-num of skiers for each thread: " + params.getNumSkiers() / (params.getNumThreads() / 4));
+        System.out.println("Phase3-num of requests per thread: " + (int) (params.getNumRuns() * 0.1) * (params.getNumSkiers() / (params.getNumThreads() / 4)));
         System.out.println();
 
-        latch = new CountDownLatch(numThreads);
+        CountDownLatch latch3 = new CountDownLatch(params.getNumThreads() / 4);
 
-        for (int i = 0; i < numThreads; i++) {
-            Thread thread = new Thread(new PostThread(latch, 1, numSkiersEachThread,
-                    numRequests, params.getNumLifts(), startTime, endTime, serverURL, stats,
+        for (int i = 0; i < params.getNumThreads() / 4; i++) {
+            Thread thread = new Thread(new PostThread(latch3,
+                    1, params.getNumSkiers() / (params.getNumThreads() / 4),
+                    (int) (params.getNumRuns() * 0.1) * (params.getNumSkiers() / (params.getNumThreads() / 4)),
+                    params.getNumLifts(),
+                    361, 420, serverURL, stats,
                     resortId, seasonId, dayId));
             thread.start();
         }
 
-        latch.await();
+        latch3.await();
 
         stats.setLoadTestEnd(System.currentTimeMillis());
         System.out.println("Time spent: " + (stats.getLoadTestEnd() - stats.getLoadTestStart()));

@@ -91,15 +91,6 @@ class PostThread implements Runnable {
                     if (retry == RETRIES)
                         stats.getNumFailReq().getAndIncrement();
                 }
-//                // print response headers
-//                HttpHeaders headers = response.headers();
-//                headers.map().forEach((k, v) -> System.out.println(k + ":" + v));
-
-//                // print status code
-//                System.out.println(response.statusCode());
-
-//                // print response body
-//                System.out.println(response.body());
             } catch (InterruptedException | IOException e) {
                 e.printStackTrace();
             }
