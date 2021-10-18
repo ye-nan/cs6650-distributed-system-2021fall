@@ -17,12 +17,33 @@ import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 
+import org.apache.commons.pool2.ObjectPool;
+import org.apache.commons.pool2.BasePooledObjectFactory;
+import org.apache.commons.pool2.PooledObject;
+import org.apache.commons.pool2.impl.DefaultPooledObject;
+import org.apache.commons.pool2.impl.GenericObjectPool;
+
 @WebServlet(name = "SkierServlet")
 public class SkierServlet extends HttpServlet {
     private static final String POST_LIFT_QUEUE_NAME = "postLiftQ";
     private static final String HOST_NAME = "localhost";
     private static Connection conn;
     private static Gson gson ;
+
+    private static ObjectPool<Channel> channelPool;
+
+    private static class ChannelFactory extends BasePooledObjectFactory<Channel> {
+        @Override
+        public Channel create() throws IOException {
+            return conn.createChannel();
+        }
+
+        @Override
+        public PooledObject<Channel> wrap(Channel channel) {
+            return new DefaultPooledObject<>(channel);
+        }
+    }
+
 
     @Override
     public void init() {
@@ -34,10 +55,11 @@ public class SkierServlet extends HttpServlet {
         } catch (IOException | TimeoutException e) {
             e.printStackTrace();
         }
+        channelPool = new GenericObjectPool<>(new ChannelFactory());
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         String urlPath = request.getPathInfo();
@@ -73,7 +95,7 @@ public class SkierServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         String urlPath = request.getPathInfo();
@@ -94,17 +116,19 @@ public class SkierServlet extends HttpServlet {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         } else {
             try {
-                Channel channel = conn.createChannel();
+//                Channel channel = conn.createChannel();
+                Channel channel = channelPool.borrowObject();
                 channel.queueDeclare(POST_LIFT_QUEUE_NAME, false, false, false, null);
                 LiftEvent lift = gson.fromJson(request.getReader(), LiftEvent.class);
 
                 // message = "skierid,timestamp,liftid"
                 String message = urlParts[7] + "," + lift.getTime() + "," + lift.getLiftId();
                 channel.basicPublish("", POST_LIFT_QUEUE_NAME, null, message.getBytes(StandardCharsets.UTF_8));
-                channel.close();
+//                channel.close();
+                channelPool.returnObject(channel);
                 response.getWriter().write((gson.toJson(lift)));
                 response.setStatus(HttpServletResponse.SC_CREATED);
-            } catch (IOException | TimeoutException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
