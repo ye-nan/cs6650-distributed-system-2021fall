@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class Client {
     private static final int SKIDAY = 420;  // 420 mins from 9am - 4pm
-    private static final String WEB_APP = "/server_war";
+    private static final String WEB_APP = "/serverRMQ_war_exploded";
 
     public static void main(String[] args) throws ParseException, InterruptedException, IOException {
         CommandLineParser parser = new CommandLineParser();
@@ -33,15 +33,15 @@ public class Client {
         // Phase 1: startup
         System.out.println("Phase1-num of threads: " + params.getNumThreads() / 4);
         System.out.println("Phase1-num of skiers for each thread: " + params.getNumSkiers() / (params.getNumThreads() / 4));
-        System.out.println("Phase1-num of requests per thread: " + (int) (params.getNumRuns() * 0.2) * (params.getNumSkiers() / (params.getNumThreads() / 4)));
+        System.out.println("Phase1-num of requests per thread: " + (int) ((params.getNumRuns() * 0.2) * params.getNumSkiers()) / (params.getNumThreads() / 4));
         System.out.println();
 
-        CountDownLatch latch1 = new CountDownLatch(params.getNumThreads() / 4 / 10);
+        CountDownLatch latch1 = new CountDownLatch(params.getNumThreads() / 4 / 10 == 0 ? 1 : params.getNumThreads() / 4 / 10);
 
         for (int i = 0; i < params.getNumThreads() / 4; i++) {
             Thread thread = new Thread(
                     new PostThread(latch1, 1, params.getNumSkiers() / (params.getNumThreads() / 4),
-                            (int) (params.getNumRuns() * 0.2) * (params.getNumSkiers() / (params.getNumThreads() / 4)),
+                            (int) ((params.getNumRuns() * 0.2) * params.getNumSkiers()) / (params.getNumThreads() / 4),
                             params.getNumLifts(),
                             1, 90, serverURL, stats,
                             resortId, seasonId, dayId));
@@ -53,7 +53,7 @@ public class Client {
         // Phase 2: peak
         System.out.println("Phase2-num of threads: " + params.getNumThreads());
         System.out.println("Phase2-num of skiers for each thread: " + params.getNumSkiers() / params.getNumThreads());
-        System.out.println("Phase2-num of requests per thread: " + (int) (params.getNumRuns() * 0.6) * (params.getNumSkiers() / params.getNumThreads()));
+        System.out.println("Phase2-num of requests per thread: " + (int) ((params.getNumRuns() * 0.6) * params.getNumSkiers()) / params.getNumThreads());
         System.out.println();
 
         CountDownLatch latch2 = new CountDownLatch(params.getNumThreads() / 10);
@@ -61,7 +61,7 @@ public class Client {
         for (int i = 0; i < params.getNumThreads(); i++) {
             Thread thread = new Thread(new PostThread(latch2,
                     1, params.getNumSkiers() / params.getNumThreads(),
-                    (int) (params.getNumRuns() * 0.6) * (params.getNumSkiers() / params.getNumThreads()),
+                    (int) ((params.getNumRuns() * 0.6) * params.getNumSkiers()) / params.getNumThreads(),
                     params.getNumLifts(), 91, 360, serverURL, stats,
                     resortId, seasonId, dayId));
             thread.start();
@@ -72,7 +72,7 @@ public class Client {
         // Phase 3: cool down
         System.out.println("Phase3-num of threads: " + params.getNumThreads() / 4);
         System.out.println("Phase3-num of skiers for each thread: " + params.getNumSkiers() / (params.getNumThreads() / 4));
-        System.out.println("Phase3-num of requests per thread: " + (int) (params.getNumRuns() * 0.1) * (params.getNumSkiers() / (params.getNumThreads() / 4)));
+        System.out.println("Phase3-num of requests per thread: " + (int) ((params.getNumRuns() * 0.1) * params.getNumSkiers()) / (params.getNumThreads() / 4));
         System.out.println();
 
         CountDownLatch latch3 = new CountDownLatch(params.getNumThreads() / 4);
@@ -80,7 +80,7 @@ public class Client {
         for (int i = 0; i < params.getNumThreads() / 4; i++) {
             Thread thread = new Thread(new PostThread(latch3,
                     1, params.getNumSkiers() / (params.getNumThreads() / 4),
-                    (int) (params.getNumRuns() * 0.1) * (params.getNumSkiers() / (params.getNumThreads() / 4)),
+                    (int) ((params.getNumRuns() * 0.1) * params.getNumSkiers()) / (params.getNumThreads() / 4),
                     params.getNumLifts(),
                     361, 420, serverURL, stats,
                     resortId, seasonId, dayId));

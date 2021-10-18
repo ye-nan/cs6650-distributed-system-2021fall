@@ -6,7 +6,7 @@ import java.util.List;
 
 public class CommandLineParser {
     private static final int MIN_NUMOPTIONS = 3;
-    private static final int MAX_NUMTHREADS = 256;
+    private static final int MAX_NUMTHREADS = 512;
     private static final int MAX_NUMSKIERS = 100000;
     private static final int DEFAULT_NUMLIFTS = 40;
     private static final int MIN_NUMLIFTS = 5;
