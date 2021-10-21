@@ -9,7 +9,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class Client {
     private static final int SKIDAY = 420;  // 420 mins from 9am - 4pm
-    private static final String WEB_APP = "/serverRMQ_war_exploded";
+//    private static final String WEB_APP = "/serverRMQ_war";
+private static final String WEB_APP = "/serverRMQ_war_exploded";
 
     public static void main(String[] args) throws ParseException, InterruptedException, IOException {
         CommandLineParser parser = new CommandLineParser();

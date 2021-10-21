@@ -30,7 +30,7 @@ class PostThread implements Runnable {
 
     private static final int RETRIES = 5;   // max number of retries
     private static final HttpClient httpClient = HttpClient.newBuilder()
-            .version(HttpClient.Version.HTTP_2)
+            .version(HttpClient.Version.HTTP_1_1)
             .connectTimeout(Duration.ofSeconds(10))
             .build();
 
