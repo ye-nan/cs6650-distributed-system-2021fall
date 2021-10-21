@@ -22,11 +22,13 @@ import org.apache.commons.pool2.BasePooledObjectFactory;
 import org.apache.commons.pool2.PooledObject;
 import org.apache.commons.pool2.impl.DefaultPooledObject;
 import org.apache.commons.pool2.impl.GenericObjectPool;
+import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 
 @WebServlet(name = "SkierServlet")
 public class SkierServlet extends HttpServlet {
     private static final String POST_LIFT_QUEUE_NAME = "postLiftQ";
-    private static final String HOST_NAME = "localhost";
+    private static final String HOST_NAME = "34.202.92.225";
+    private static final int PORT = 5672;
     private static Connection conn;
     private static Gson gson ;
 
@@ -49,7 +51,11 @@ public class SkierServlet extends HttpServlet {
     public void init() {
         gson = new Gson();
         ConnectionFactory factory = new ConnectionFactory();
+        factory.setUsername("admin");
+        factory.setPassword("password");
+        factory.setVirtualHost("/");
         factory.setHost(HOST_NAME);
+        factory.setPort(PORT);
         try {
             conn = factory.newConnection();
         } catch (IOException | TimeoutException e) {
@@ -118,7 +124,6 @@ public class SkierServlet extends HttpServlet {
             try {
 //                Channel channel = conn.createChannel();
                 Channel channel = channelPool.borrowObject();
-                channel.queueDeclare(POST_LIFT_QUEUE_NAME, false, false, false, null);
                 LiftEvent lift = gson.fromJson(request.getReader(), LiftEvent.class);
 
                 // message = "skierid,timestamp,liftid"
