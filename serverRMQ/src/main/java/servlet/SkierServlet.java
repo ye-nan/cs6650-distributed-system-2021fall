@@ -61,7 +61,10 @@ public class SkierServlet extends HttpServlet {
         } catch (IOException | TimeoutException e) {
             e.printStackTrace();
         }
-        channelPool = new GenericObjectPool<>(new ChannelFactory());
+        GenericObjectPoolConfig<Channel> config = new GenericObjectPoolConfig<>();
+        config.setMaxTotal(128);
+        config.setMaxIdle(128);
+        channelPool = new GenericObjectPool<>(new ChannelFactory(), config);
     }
 
     @Override
