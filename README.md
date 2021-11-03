@@ -1,5 +1,7 @@
 # cs6650-distributed-system-2021fall
 
+### Assignment 3 updates:
+Working on assignment3...Commits starting from Nov.3rd are for assignment 3.
 ### Assignment 2 updates:
 - ServerRMQ: server with publising messages to a broker built with RabbitMQ
 - Consumer: consumer processing messages from the queue
