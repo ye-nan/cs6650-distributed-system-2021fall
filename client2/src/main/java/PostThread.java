@@ -23,10 +23,10 @@ class PostThread implements Runnable {
     private final int endTime;
     private final String serverURL;
     private final Stats stats;
-    private Random rand;
-    private int resortId;
-    private String seasonId;
-    private String dayId;
+    private final Random rand;
+    private final int resortId;
+    private final String season;
+    private final int day;
 
     private static final int RETRIES = 5;   // max number of retries
     private static final HttpClient httpClient = HttpClient.newBuilder()
@@ -36,7 +36,7 @@ class PostThread implements Runnable {
 
     public PostThread(CountDownLatch latch, int startSkier, int endSkier,
                       int numRequests, int numLifts, int startTime, int endTime,
-                      String serverURL, Stats stats, int resortId, String seasonId, String dayId) {
+                      String serverURL, Stats stats, int resortId, String season, int day) {
         this.latch = latch;
         this.startSkier = startSkier;
         this.endSkier = endSkier;
@@ -47,8 +47,8 @@ class PostThread implements Runnable {
         this.serverURL = serverURL;
         this.stats = stats;
         this.resortId = resortId;
-        this.seasonId = seasonId;
-        this.dayId = dayId;
+        this.season = season;
+        this.day = day;
         this.rand = new Random();
     }
 
@@ -62,14 +62,18 @@ class PostThread implements Runnable {
             // /10/seasons/2016/day/363/skier/2
             String url = new StringBuilder(serverURL)
                     .append("/").append(resortId)
-                    .append("/seasons/").append(seasonId)
-                    .append("/days/").append(dayId)
+                    .append("/seasons/").append(season)
+                    .append("/days/").append(day)
                     .append("/skiers/").append(skierId).toString();
 
             String postBody = new StringBuilder()
                     .append("{")
-                    .append("\"liftId\":\"").append(liftId).append("\",")
-                    .append("\"time\":\"").append(time).append("\"")
+                    .append("\"skierId\": ").append(skierId).append(",")
+                    .append("\"liftId\": ").append(liftId).append(",")
+                    .append("\"resortId\": ").append(resortId).append(",")
+                    .append("\"season\": \"").append(season).append("\",")
+                    .append("\"day\": ").append(day).append(",")
+                    .append("\"time\": ").append(time)
                     .append("}").toString();
 
             HttpRequest request = HttpRequest.newBuilder()

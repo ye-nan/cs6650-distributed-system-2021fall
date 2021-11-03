@@ -4,13 +4,18 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.Random;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Client {
-    private static final int SKIDAY = 420;  // 420 mins from 9am - 4pm
-//    private static final String WEB_APP = "/serverRMQ_war";
-private static final String WEB_APP = "/serverRMQ_war_exploded";
+    private static final String WEB_APP = "/serverRMQ_war";
+//private static final String WEB_APP = "/serverRMQ_war_exploded";
+
+    private static final Random rand = new Random();
+    private static final String[] seasons = {"Spring", "Summer", "Fall", "Winter"};
+    private static final int NUM_RESORTS = 9;   // resort 1 to 9
+    private static final int NUM_DAYS = 90;     // number of days per season
 
     public static void main(String[] args) throws ParseException, InterruptedException, IOException {
         CommandLineParser parser = new CommandLineParser();
@@ -24,10 +29,6 @@ private static final String WEB_APP = "/serverRMQ_war_exploded";
                 Paths.get("src", "main", "resources", "record.csv"));
         Files.newBufferedWriter(stats.getFilePath() , StandardOpenOption.TRUNCATE_EXISTING);
 
-        // dummy data for assignment 1
-        int resortId = 1;
-        String seasonId = "2021";
-        String dayId = "1";
         String serverURL = "http://" + params.getServer() + WEB_APP + "/skiers";
 
         stats.setLoadTestStart(System.currentTimeMillis());
@@ -45,7 +46,7 @@ private static final String WEB_APP = "/serverRMQ_war_exploded";
                             (int) ((params.getNumRuns() * 0.2) * params.getNumSkiers()) / (params.getNumThreads() / 4),
                             params.getNumLifts(),
                             1, 90, serverURL, stats,
-                            resortId, seasonId, dayId));
+                            rand.nextInt(NUM_RESORTS) + 1, seasons[rand.nextInt(seasons.length)], rand.nextInt(NUM_DAYS) + 1));
             thread.start();
         }
 
@@ -64,7 +65,7 @@ private static final String WEB_APP = "/serverRMQ_war_exploded";
                     1, params.getNumSkiers() / params.getNumThreads(),
                     (int) ((params.getNumRuns() * 0.6) * params.getNumSkiers()) / params.getNumThreads(),
                     params.getNumLifts(), 91, 360, serverURL, stats,
-                    resortId, seasonId, dayId));
+                    rand.nextInt(NUM_RESORTS) + 1, seasons[rand.nextInt(seasons.length)], rand.nextInt(NUM_DAYS) + 1));
             thread.start();
         }
 
@@ -84,7 +85,7 @@ private static final String WEB_APP = "/serverRMQ_war_exploded";
                     (int) ((params.getNumRuns() * 0.1) * params.getNumSkiers()) / (params.getNumThreads() / 4),
                     params.getNumLifts(),
                     361, 420, serverURL, stats,
-                    resortId, seasonId, dayId));
+                    rand.nextInt(NUM_RESORTS) + 1, seasons[rand.nextInt(seasons.length)], rand.nextInt(NUM_DAYS) + 1));
             thread.start();
         }
 
