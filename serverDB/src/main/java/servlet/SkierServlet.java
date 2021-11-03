@@ -97,7 +97,7 @@ public class SkierServlet extends HttpServlet {
                         -1,
                         Integer.parseInt(urlParts[1]),
                         urlParts[3],
-                        urlParts[5],
+                        Integer.parseInt(urlParts[5]),
                         -1)));
             }
             response.setStatus(HttpServletResponse.SC_OK);
@@ -126,16 +126,12 @@ public class SkierServlet extends HttpServlet {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         } else {
             try {
-//                Channel channel = conn.createChannel();
                 Channel channel = channelPool.borrowObject();
-                LiftEvent lift = gson.fromJson(request.getReader(), LiftEvent.class);
-
-                // message = "skierid,timestamp,liftid"
-                String message = urlParts[7] + "," + lift.getTime() + "," + lift.getLiftId();
-                channel.basicPublish("", POST_LIFT_QUEUE_NAME, null, message.getBytes(StandardCharsets.UTF_8));
-//                channel.close();
+                LiftRide liftRide = gson.fromJson(request.getReader(), LiftRide.class);
+                channel.basicPublish("", POST_LIFT_QUEUE_NAME, null,
+                        liftRide.toString().getBytes(StandardCharsets.UTF_8));
                 channelPool.returnObject(channel);
-                response.getWriter().write((gson.toJson(lift)));
+                response.getWriter().write((gson.toJson(liftRide)));
                 response.setStatus(HttpServletResponse.SC_CREATED);
             } catch (Exception e) {
                 e.printStackTrace();
