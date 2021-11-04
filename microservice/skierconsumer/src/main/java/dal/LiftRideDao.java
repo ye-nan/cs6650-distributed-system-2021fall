@@ -2,13 +2,14 @@ package dal;
 
 import java.sql.*;
 
+import com.zaxxer.hikari.HikariDataSource;
 import org.apache.commons.dbcp2.*;
 
 public class LiftRideDao {
-    private static BasicDataSource dataSource;
+    private static HikariDataSource dataSource;
 
     public LiftRideDao() {
-        dataSource = DBCPDataSource.getDataSource();
+        dataSource = HikariCPDataSource.getDataSource();
     }
 
     public void createLiftRide(LiftRide newLiftRide) {

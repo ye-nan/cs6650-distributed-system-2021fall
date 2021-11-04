@@ -61,4 +61,8 @@ public class Consumer {
         completed.await();
         System.out.println(NUMTHREADS + " consumers started.");
     }
+//public static void main(String[] args) {
+//    LiftRideDao dao = new LiftRideDao();
+//    dao.createLiftRide(new LiftRide(1, 1, 1, "Spring", 1, 1));
+//}
 }
