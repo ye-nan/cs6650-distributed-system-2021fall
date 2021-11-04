@@ -27,8 +27,9 @@ import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 @WebServlet(name = "SkierServlet")
 public class SkierServlet extends HttpServlet {
     private static final String POST_LIFT_QUEUE_NAME = "postLiftQ";
-//    private static final String HOST_NAME = "34.202.92.225";
-    private static final String HOST_NAME = "localhost";
+    private static final String HOST_NAME = "34.202.92.225";
+//    private static final String HOST_NAME = "localhost";
+    private static final int NUM_CHANNELS = 64;
     private static final int PORT = 5672;
     private static Connection conn;
     private static Gson gson ;
@@ -52,19 +53,19 @@ public class SkierServlet extends HttpServlet {
     public void init() {
         gson = new Gson();
         ConnectionFactory factory = new ConnectionFactory();
-//        factory.setUsername("admin");
-//        factory.setPassword("password");
-//        factory.setVirtualHost("/");
+        factory.setUsername("admin");
+        factory.setPassword("password");
+        factory.setVirtualHost("/");
         factory.setHost(HOST_NAME);
-//        factory.setPort(PORT);
+        factory.setPort(PORT);
         try {
             conn = factory.newConnection();
         } catch (IOException | TimeoutException e) {
             e.printStackTrace();
         }
         GenericObjectPoolConfig<Channel> config = new GenericObjectPoolConfig<>();
-        config.setMaxTotal(128);
-        config.setMaxIdle(128);
+        config.setMaxTotal(NUM_CHANNELS);
+        config.setMaxIdle(NUM_CHANNELS);
         channelPool = new GenericObjectPool<>(new ChannelFactory(), config);
     }
 
@@ -160,14 +161,9 @@ public class SkierServlet extends HttpServlet {
                 return false;
             }
         } else if (urlPath.length == 8) {
-            // e.g., urlPath  = "/1/seasons/2019/day/1/skier/123"
+            // e.g., urlPath  = "/1/seasons/Spring/day/1/skier/123"
             try {
-                for (int i = 1; i < urlPath.length; i += 2) {
-                    Integer.parseInt(urlPath[i]);
-                }
-
-                return (urlPath[3].length() == 4
-                        && Integer.parseInt(urlPath[5]) >= 1
+                return (Integer.parseInt(urlPath[5]) >= 1
                         && Integer.parseInt(urlPath[5]) <= 365
                         && urlPath[2].equals("seasons")
                         && urlPath[4].equals("days")

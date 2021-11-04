@@ -14,7 +14,7 @@ public class LiftRideDao {
     public void createLiftRide(LiftRide newLiftRide) {
         Connection conn = null;
         PreparedStatement preparedStatement = null;
-        String insertQueryStatement = "INSERT INTO LiftRides (skierId, liftId, resortId, seasonId, day, time) " +
+        String insertQueryStatement = "INSERT INTO LiftRides (skierId, liftId, resortId, season, day, time) " +
                 "VALUES (?,?,?,?,?,?)";
         try {
             conn = dataSource.getConnection();

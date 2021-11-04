@@ -5,7 +5,6 @@ import org.apache.commons.dbcp2.*;
 public class DBCPDataSource {
     private static BasicDataSource dataSource;
 
-    // NEVER store sensitive information below in plain text!
     private static final String HOST_NAME = System.getenv("MySQL_IP_ADDRESS");
     private static final String PORT = System.getenv("MySQL_PORT");
     private static final String DATABASE = "LiftRides";
@@ -13,7 +12,6 @@ public class DBCPDataSource {
     private static final String PASSWORD = System.getenv("DB_PASSWORD");
 
     static {
-        // https://dev.mysql.com/doc/connector-j/8.0/en/connector-j-reference-jdbc-url-format.html
         dataSource = new BasicDataSource();
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
