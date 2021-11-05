@@ -11,7 +11,7 @@ import java.util.concurrent.CountDownLatch;
 
 public class Consumer {
 
-    private static final String QUEUE_NAME = "SkierQ";
+    private static final String QUEUE_NAME = "ResortQ";
     private static final String HOST_NAME = "34.202.92.225";
     private static final int PORT = 5672;
     private static final int NUMTHREADS = 128;
@@ -45,7 +45,7 @@ public class Consumer {
                         int vertical = Integer.parseInt(tokens[6].split("=")[1]);
 
                         LiftRideDao dao = new LiftRideDao();
-                        dao.createLiftRide(new LiftRide(skierId, liftId, season, day, vertical));
+                        dao.createLiftRide(new LiftRide(skierId, liftId, resortId, day, time));
 
                         channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
                     };

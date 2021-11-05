@@ -6,7 +6,7 @@ public class HikariCPDataSource {
     private static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
     private static final String HOST_NAME = System.getenv("MySQL_IP_ADDRESS");
     private static final String PORT = System.getenv("MySQL_PORT");
-    private static final String DATABASE = "SkierDB";
+    private static final String DATABASE = "ResortDB";
     private static final String USERNAME = System.getenv("DB_USERNAME");
     private static final String PASSWORD = System.getenv("DB_PASSWORD");
 

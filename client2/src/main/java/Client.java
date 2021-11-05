@@ -16,6 +16,7 @@ public class Client {
     private static final String[] seasons = {"Spring", "Summer", "Fall", "Winter"};
     private static final int NUM_RESORTS = 9;   // resort 1 to 9
     private static final int NUM_DAYS = 90;     // number of days per season
+    private static final int MAX_VERTICAL = 1000;   // maximum vertical is 1000 feet
 
     public static void main(String[] args) throws ParseException, InterruptedException, IOException {
         CommandLineParser parser = new CommandLineParser();
@@ -46,7 +47,7 @@ public class Client {
                             (int) ((params.getNumRuns() * 0.2) * params.getNumSkiers()) / (params.getNumThreads() / 4),
                             params.getNumLifts(),
                             1, 90, serverURL, stats,
-                            rand.nextInt(NUM_RESORTS) + 1, seasons[rand.nextInt(seasons.length)], rand.nextInt(NUM_DAYS) + 1));
+                            rand.nextInt(NUM_RESORTS) + 1, seasons[rand.nextInt(seasons.length)], rand.nextInt(NUM_DAYS) + 1, rand.nextInt(MAX_VERTICAL) + 1));
             thread.start();
         }
 
@@ -65,7 +66,7 @@ public class Client {
                     1, params.getNumSkiers() / params.getNumThreads(),
                     (int) ((params.getNumRuns() * 0.6) * params.getNumSkiers()) / params.getNumThreads(),
                     params.getNumLifts(), 91, 360, serverURL, stats,
-                    rand.nextInt(NUM_RESORTS) + 1, seasons[rand.nextInt(seasons.length)], rand.nextInt(NUM_DAYS) + 1));
+                    rand.nextInt(NUM_RESORTS) + 1, seasons[rand.nextInt(seasons.length)], rand.nextInt(NUM_DAYS) + 1, rand.nextInt(MAX_VERTICAL) + 1));
             thread.start();
         }
 
@@ -85,7 +86,7 @@ public class Client {
                     (int) ((params.getNumRuns() * 0.1) * params.getNumSkiers()) / (params.getNumThreads() / 4),
                     params.getNumLifts(),
                     361, 420, serverURL, stats,
-                    rand.nextInt(NUM_RESORTS) + 1, seasons[rand.nextInt(seasons.length)], rand.nextInt(NUM_DAYS) + 1));
+                    rand.nextInt(NUM_RESORTS) + 1, seasons[rand.nextInt(seasons.length)], rand.nextInt(NUM_DAYS) + 1, rand.nextInt(MAX_VERTICAL) + 1));
             thread.start();
         }
 

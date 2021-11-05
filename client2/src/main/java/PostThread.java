@@ -27,6 +27,7 @@ class PostThread implements Runnable {
     private final int resortId;
     private final String season;
     private final int day;
+    private final int vertical;
 
     private static final int RETRIES = 5;   // max number of retries
     private static final HttpClient httpClient = HttpClient.newBuilder()
@@ -36,7 +37,7 @@ class PostThread implements Runnable {
 
     public PostThread(CountDownLatch latch, int startSkier, int endSkier,
                       int numRequests, int numLifts, int startTime, int endTime,
-                      String serverURL, Stats stats, int resortId, String season, int day) {
+                      String serverURL, Stats stats, int resortId, String season, int day, int vertical) {
         this.latch = latch;
         this.startSkier = startSkier;
         this.endSkier = endSkier;
@@ -49,6 +50,7 @@ class PostThread implements Runnable {
         this.resortId = resortId;
         this.season = season;
         this.day = day;
+        this.vertical = vertical;
         this.rand = new Random();
     }
 
@@ -73,7 +75,8 @@ class PostThread implements Runnable {
                     .append("\"resortId\": ").append(resortId).append(",")
                     .append("\"season\": \"").append(season).append("\",")
                     .append("\"day\": ").append(day).append(",")
-                    .append("\"time\": ").append(time)
+                    .append("\"time\": ").append(time).append(",")
+                    .append("\"vertical\": ").append(vertical)
                     .append("}").toString();
 
             HttpRequest request = HttpRequest.newBuilder()

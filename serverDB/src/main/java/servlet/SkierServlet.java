@@ -1,12 +1,10 @@
 package servlet;
 
 import com.google.gson.Gson;
-import model.LiftEvent;
 import model.LiftRide;
 import model.Message;
 import model.SkierVertical;
 
-import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
@@ -26,8 +24,11 @@ import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 
 @WebServlet(name = "SkierServlet")
 public class SkierServlet extends HttpServlet {
-    private static final String POST_LIFT_QUEUE_NAME = "postLiftQ";
-    private static final String HOST_NAME = "34.202.92.225";
+//    private static final String POST_LIFT_QUEUE_NAME = "postLiftQ";
+    private static final String RMQ_EXCHANGE_NAME = "LiftRide";
+    private static final String RMQ_HOST_NAME = "34.202.92.225";
+    private static final String RMQ_USERNAME = System.getProperty("RMQ_USERNAME");
+    private static final String RMQ_PASSWORD = System.getProperty("RMQ_PASSWORD");
 //    private static final String HOST_NAME = "localhost";
     private static final int NUM_CHANNELS = 64;
     private static final int PORT = 5672;
@@ -53,10 +54,10 @@ public class SkierServlet extends HttpServlet {
     public void init() {
         gson = new Gson();
         ConnectionFactory factory = new ConnectionFactory();
-        factory.setUsername("admin");
-        factory.setPassword("password");
+        factory.setUsername(RMQ_USERNAME);
+        factory.setPassword(RMQ_PASSWORD);
         factory.setVirtualHost("/");
-        factory.setHost(HOST_NAME);
+        factory.setHost(RMQ_HOST_NAME);
         factory.setPort(PORT);
         try {
             conn = factory.newConnection();
@@ -99,7 +100,7 @@ public class SkierServlet extends HttpServlet {
                         Integer.parseInt(urlParts[1]),
                         urlParts[3],
                         Integer.parseInt(urlParts[5]),
-                        -1)));
+                        -1, -1)));
             }
             response.setStatus(HttpServletResponse.SC_OK);
         }
@@ -129,7 +130,7 @@ public class SkierServlet extends HttpServlet {
             try {
                 Channel channel = channelPool.borrowObject();
                 LiftRide liftRide = gson.fromJson(request.getReader(), LiftRide.class);
-                channel.basicPublish("", POST_LIFT_QUEUE_NAME, null,
+                channel.basicPublish(RMQ_EXCHANGE_NAME, "", null,
                         liftRide.toString().getBytes(StandardCharsets.UTF_8));
                 channelPool.returnObject(channel);
                 response.getWriter().write((gson.toJson(liftRide)));
