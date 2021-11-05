@@ -9,8 +9,8 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Client {
-//    private static final String WEB_APP = "/serverDB_war";
-    private static final String WEB_APP = "/serverDB_war_exploded";
+    private static final String WEB_APP = "/serverDB_war";
+//    private static final String WEB_APP = "/serverDB_war_exploded";
 
     private static final Random rand = new Random();
     private static final String[] seasons = {"Spring", "Summer", "Fall", "Winter"};

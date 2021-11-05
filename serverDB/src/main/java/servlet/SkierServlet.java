@@ -24,13 +24,12 @@ import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 
 @WebServlet(name = "SkierServlet")
 public class SkierServlet extends HttpServlet {
-//    private static final String POST_LIFT_QUEUE_NAME = "postLiftQ";
     private static final String RMQ_EXCHANGE_NAME = "LiftRide";
     private static final String RMQ_HOST_NAME = "34.202.92.225";
     private static final String RMQ_USERNAME = System.getProperty("RMQ_USERNAME");
     private static final String RMQ_PASSWORD = System.getProperty("RMQ_PASSWORD");
 //    private static final String HOST_NAME = "localhost";
-    private static final int NUM_CHANNELS = 64;
+    private static final int NUM_CHANNELS = 128;
     private static final int PORT = 5672;
     private static Connection conn;
     private static Gson gson ;
