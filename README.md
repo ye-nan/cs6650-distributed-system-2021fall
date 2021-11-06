@@ -1,7 +1,12 @@
 # cs6650-distributed-system-2021fall
 
 ### Assignment 3 updates:
-Working on assignment3...Commits starting from Nov.3rd are for assignment 3.
+Commits starting from Nov.3rd are for assignment 3.
+- **/microservices**: contains code for the two microservices/consumers connecting with MySql database on AWS RDS
+- **/serverDB**: contains code for server with updated LiftRide data model for addressing the requirements by assignment 3.
+
+![image](https://user-images.githubusercontent.com/66226824/140624291-cf24c48d-74f1-4c6b-bb00-91047be3674d.png)
+
 ### Assignment 2 updates:
 - ServerRMQ: server with publising messages to a broker built with RabbitMQ
 - Consumer: consumer processing messages from the queue
