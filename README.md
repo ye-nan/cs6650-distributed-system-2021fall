@@ -1,7 +1,7 @@
 # cs6650-distributed-system-2021fall
 
 ### Assignment 4 updates:
-- Currently working on assignment 4... Commits on or after Dec.6th are for assignment 4.
+- Currently working on assignment 4... Commits on or after Dec.2nd are for assignment 4.
 
 ### Assignment 3 updates:
 Commits starting from Nov.3rd are for assignment 3.
