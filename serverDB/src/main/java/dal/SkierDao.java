@@ -16,7 +16,7 @@ public class SkierDao {
     public int getDayVertical(int resortId, String season, int dayId,
                               int skierId) {
         int totalVertical = 0;
-        String queryStr = "SELECT SUM(vertical) as \"totalVert\" FROM SkierDB.LiftRides WHERE skierId=? AND"
+        String queryStr = "SELECT SUM(vertical) as \"totalVert\" FROM LiftRides WHERE skierId=? AND"
                 + " season=? AND day=?;";
         try (Connection conn = dataSource.getConnection();
              PreparedStatement preparedStatement = conn.prepareStatement(queryStr)) {
@@ -25,7 +25,7 @@ public class SkierDao {
             preparedStatement.setInt(3, dayId);
             try (ResultSet result = preparedStatement.executeQuery()) {
                 while (result.next()) {
-                    totalVertical += result.getInt("totalVert");
+                    totalVertical += result.getInt(1);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -36,15 +36,15 @@ public class SkierDao {
         return totalVertical;
     }
 
-    public int geTotalVertical(int skierId) {
+    public int getTotalVertical(int skierId) {
         int totalVertical = 0;
-        String queryStr = "SELECT SUM(vertical) as \"totalVert\" FROM SkierDB.LiftRides WHERE skierId=?;";
+        String queryStr = "SELECT SUM(vertical) as \"totalVert\" FROM LiftRides WHERE skierId=?;";
         try (Connection conn = dataSource.getConnection();
              PreparedStatement preparedStatement = conn.prepareStatement(queryStr)) {
             preparedStatement.setInt(1, skierId);
             try (ResultSet result = preparedStatement.executeQuery()) {
                 while (result.next()) {
-                    totalVertical += result.getInt("totalVert");
+                    totalVertical += result.getInt(1);
                 }
             } catch (Exception e) {
                 e.printStackTrace();

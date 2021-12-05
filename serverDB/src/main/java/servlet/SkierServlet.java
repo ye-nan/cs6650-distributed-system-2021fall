@@ -1,6 +1,7 @@
 package servlet;
 
 import com.google.gson.Gson;
+import dal.SkierDao;
 import model.LiftRide;
 import model.Message;
 import model.SkierVertical;
@@ -90,16 +91,23 @@ public class SkierServlet extends HttpServlet {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         } else {
             if (urlParts[2].equals("vertical")) {
-                SkierVertical skierVertical = new SkierVertical(Integer.parseInt(urlParts[1]), -1, "Spring", 99);
-                response.getWriter().write(gson.toJson(skierVertical));
+                int skierId = Integer.parseInt(urlParts[1]);
+                SkierDao dao = new SkierDao();
+                int totalVert = dao.getTotalVertical(skierId);
+                response.getWriter().write("Total vertical for Skier " + skierId
+                        + " is " + totalVert + " m.");
             } else {
-                response.getWriter().write(gson.toJson(new LiftRide(
-                        Integer.parseInt(urlParts[7]),
-                        -1,
-                        Integer.parseInt(urlParts[1]),
-                        urlParts[3],
-                        Integer.parseInt(urlParts[5]),
-                        -1, -1)));
+                int resortId = Integer.parseInt(urlParts[1]);
+                String season = urlParts[3];
+                int day = Integer.parseInt(urlParts[5]);
+                int skierId = Integer.parseInt(urlParts[7]);
+                SkierDao dao = new SkierDao();
+                int dayVert = dao.getDayVertical(resortId, season, day, skierId);
+                response.getWriter().write("Ski day " + day
+                        + " vertical for Skier" + skierId
+                        + " for Season " + season
+                        + " at Resort " + resortId
+                        + " is " + dayVert + " m.");
             }
             response.setStatus(HttpServletResponse.SC_OK);
         }

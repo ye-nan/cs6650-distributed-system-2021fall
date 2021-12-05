@@ -1,6 +1,7 @@
 package servlet;
 
 import com.google.gson.Gson;
+import dal.ResortDao;
 import model.*;
 
 import javax.servlet.ServletException;
@@ -60,11 +61,16 @@ public class ResortServlet extends HttpServlet {
             response.getWriter().write(gson.toJson(message));
             return;
         } else {
+            int resortId = Integer.parseInt(urlParts[1]);
+            String season = urlParts[3];
+            int day = Integer.parseInt(urlParts[5]);
+            ResortDao dao = new ResortDao();
+            int numSkiers = dao.getNumSkiers(resortId, season, day);
             response.setStatus(HttpServletResponse.SC_OK);
-            response.getWriter().write(gson.toJson(new Resort(
-                    Integer.parseInt(urlParts[1]),
-                    "dummy resort",
-                    Arrays.asList("2012", "2014", "2020"))));
+            response.getWriter().write("Number of unique skiers at Resort " + resortId
+                    + " for Season " + season
+                    + " on Day " + day
+                    + " is " + numSkiers);
         }
     }
 
@@ -72,11 +78,20 @@ public class ResortServlet extends HttpServlet {
         if (urlPath.length == 1) {
             // e.g., /resorts
             return true;
-        }
-        if (urlPath.length == 3) {
+        } else if (urlPath.length == 3) {
             try {
                 Integer.parseInt(urlPath[1]);
                 return urlPath[2].equals("seasons");
+            } catch (Exception e) {
+                return false;
+            }
+        } else if (urlPath.length == 7) {
+            try {
+                return (Integer.parseInt(urlPath[5]) >= 1
+                        && Integer.parseInt(urlPath[5]) <= 365
+                        && urlPath[2].equals("seasons")
+                        && urlPath[4].equals("days")
+                        && urlPath[6].equals("skiers"));
             } catch (Exception e) {
                 return false;
             }
