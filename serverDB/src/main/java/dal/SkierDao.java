@@ -18,6 +18,8 @@ public class SkierDao {
         int totalVertical = 0;
         String queryStr = "SELECT SUM(vertical) as \"totalVert\" FROM LiftRides WHERE skierId=? AND"
                 + " season=? AND day=?;";
+//        String queryStr = "SELECT vertical FROM LiftRides WHERE skierId=? AND"
+//                + " season=? AND day=?;";
         try (Connection conn = dataSource.getConnection();
              PreparedStatement preparedStatement = conn.prepareStatement(queryStr)) {
             preparedStatement.setInt(1, skierId);
@@ -39,6 +41,8 @@ public class SkierDao {
     public int getTotalVertical(int skierId) {
         int totalVertical = 0;
         String queryStr = "SELECT SUM(vertical) as \"totalVert\" FROM LiftRides WHERE skierId=?;";
+//        String queryStr = "SELECT vertical FROM LiftRides WHERE skierId=?;";
+
         try (Connection conn = dataSource.getConnection();
              PreparedStatement preparedStatement = conn.prepareStatement(queryStr)) {
             preparedStatement.setInt(1, skierId);

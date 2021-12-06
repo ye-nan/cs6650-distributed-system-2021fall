@@ -1,10 +1,11 @@
 package servlet;
 
 import com.google.gson.Gson;
+
 import dal.SkierDao;
+import dal.SkierDataSource;
 import model.LiftRide;
 import model.Message;
-import model.SkierVertical;
 
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
@@ -36,6 +37,7 @@ public class SkierServlet extends HttpServlet {
     private static Gson gson ;
 
     private static ObjectPool<Channel> channelPool;
+//    private static SkierDao dao;
 
     private static class ChannelFactory extends BasePooledObjectFactory<Channel> {
         @Override
@@ -64,6 +66,8 @@ public class SkierServlet extends HttpServlet {
         } catch (IOException | TimeoutException e) {
             e.printStackTrace();
         }
+//        SkierDataSource.getDataSource();
+//        dao = new SkierDao();
         GenericObjectPoolConfig<Channel> config = new GenericObjectPoolConfig<>();
         config.setMaxTotal(NUM_CHANNELS);
         config.setMaxIdle(NUM_CHANNELS);
@@ -90,6 +94,7 @@ public class SkierServlet extends HttpServlet {
             response.getWriter().write(gson.toJson(message));
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         } else {
+            response.setStatus(HttpServletResponse.SC_OK);
             if (urlParts[2].equals("vertical")) {
                 int skierId = Integer.parseInt(urlParts[1]);
                 SkierDao dao = new SkierDao();
@@ -109,7 +114,6 @@ public class SkierServlet extends HttpServlet {
                         + " at Resort " + resortId
                         + " is " + dayVert + " m.");
             }
-            response.setStatus(HttpServletResponse.SC_OK);
         }
     }
 

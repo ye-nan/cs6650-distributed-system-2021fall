@@ -17,8 +17,9 @@ public class SkierDataSource {
         dataSource.setUsername(USERNAME);
         dataSource.setPassword(PASSWORD);
         dataSource.setDriverClassName(JDBC_DRIVER);
-
-        dataSource.setMaximumPoolSize(60);
+        dataSource.setMaxLifetime(300000);
+        dataSource.setMaximumPoolSize(40);
+//        dataSource.setMinimumIdle(30);
     }
 
     public static HikariDataSource getDataSource() {

@@ -2,6 +2,7 @@ package servlet;
 
 import com.google.gson.Gson;
 import dal.ResortDao;
+import dal.ResortDataSource;
 import model.*;
 
 import javax.servlet.ServletException;
@@ -16,6 +17,13 @@ import java.util.stream.Collectors;
 @WebServlet(name = "ResortServlet")
 public class ResortServlet extends HttpServlet {
     private final Gson gson  = new Gson();
+//    private static ResortDao dao;
+
+//    @Override
+//    public void init() {
+//        ResortDataSource.getDataSource();
+//        dao = new ResortDao();
+//    }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("application/json");
@@ -47,9 +55,8 @@ public class ResortServlet extends HttpServlet {
 
         // check we have a URL!
         if (urlPath == null || urlPath.isEmpty()) {
-            response.setStatus(HttpServletResponse.SC_OK);
-            ResortList resorts = new ResortList(Arrays.asList(1, 2, 3));
-            response.getWriter().write(gson.toJson(resorts));
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            response.getWriter().write("missing paramterers");
             return;
         }
 

@@ -17,6 +17,8 @@ public class ResortDao {
         int numSkiers = 0;
         String queryStr = "SELECT COUNT(DISTINCT(skierId)) as \"numSkiers\" FROM LiftRides WHERE resortId=? AND"
                 + " day=?;";
+//        String queryStr = "SELECT DISTINCT(skierId) FROM LiftRides WHERE resortId=? AND"
+//                + " day=?;";
         try (Connection conn = dataSource.getConnection();
              PreparedStatement preparedStatement = conn.prepareStatement(queryStr)) {
             preparedStatement.setInt(1, resortId);
