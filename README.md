@@ -1,7 +1,11 @@
 # cs6650-distributed-system-2021fall
 
 ### Assignment 4 updates:
-- Currently working on assignment 4... Commits on or after Dec.2nd are for assignment 4.
+- Updated design for READ
+![image](https://user-images.githubusercontent.com/66226824/144912340-e880aa80-7cce-4d4d-8a79-c9b73a5b6fef.png)
+- JMeter load test
+![image](https://user-images.githubusercontent.com/66226824/144912411-2bfd7ded-8fc1-46d9-9252-3ce529a93b79.png)
+
 
 ### Assignment 3 updates:
 Commits starting from Nov.3rd are for assignment 3.
